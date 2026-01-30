@@ -12,28 +12,24 @@ def load_data(path):
         if "id" in col.lower():
             df = df.drop(columns=[col])
 
-    # 2️⃣ Separar X e y
+    # 2️⃣ Separar features y target
     X = df.iloc[:, :-1]
     y = df.iloc[:, -1]
 
-    # 3️⃣ One-Hot Encoding para categóricas
+    # 3️⃣ One-hot para features categóricas
     X = pd.get_dummies(X)
 
-    # 4️⃣ Codificar target si no es numérico
-    if y.dtype == "object":
-        y = y.astype("category").cat.codes
+    # 4️⃣ 🔥 LABEL ENCODING REAL (CLAVE)
+    y = y.astype("category")
+    y = y.cat.codes  # fuerza 0..C-1
 
-    # 5️⃣ Convertir TODO a float (sin excepciones)
+    # 5️⃣ Forzar numérico
     X = X.apply(lambda col: pd.to_numeric(col, errors="coerce"))
-    y = pd.to_numeric(y, errors="coerce")
-
-    # 6️⃣ Reemplazar NaN e infinitos
     X = X.replace([np.inf, -np.inf], np.nan).fillna(0)
-    y = y.fillna(0)
 
-    # 7️⃣ 🔥 FORZAR NumPy float32 (CLAVE)
+    # 6️⃣ NumPy float / int
     X = np.asarray(X, dtype=np.float32)
-    y = np.asarray(y, dtype=np.float32).reshape(-1, 1)
+    y = np.asarray(y, dtype=np.int64)
 
     return TensorDataset(
         torch.from_numpy(X),
