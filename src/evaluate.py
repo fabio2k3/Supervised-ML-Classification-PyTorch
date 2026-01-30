@@ -9,8 +9,9 @@ def evaluate():
     loader = DataLoader(dataset, batch_size=64, shuffle=False)
 
     input_size = dataset.tensors[0].shape[1]
+    num_classes = len(torch.unique(dataset.tensors[1]))  # 🔥 AGREGADO
 
-    model = Classifier(input_size)
+    model = Classifier(input_size, num_classes)
     model.load_state_dict(torch.load("outputs/model.pth"))
     model.eval()
 
@@ -20,7 +21,7 @@ def evaluate():
     with torch.no_grad():
         for X, y in loader:
             outputs = model(X)
-            predictions = (outputs >= 0.5).float()
+            _, predictions = torch.max(outputs, 1)  # ✅ CORRECCIÓN CLAVE
 
             correct += (predictions == y).sum().item()
             total += y.size(0)
