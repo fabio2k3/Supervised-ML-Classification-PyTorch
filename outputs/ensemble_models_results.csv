@@ -1,0 +1,4 @@
+Model,Type,RMSE (mean),RMSE (std),MAE (mean),MAE (std)
+RandomForest,Bagging,0.1347,0.0051,0.0933,0.0020
+XGBoost,Boosting,0.1244,0.0082,0.0848,0.0041
+LightGBM,Boosting,0.1244,0.0081,0.0856,0.0041
