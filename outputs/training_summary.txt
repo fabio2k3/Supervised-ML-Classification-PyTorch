@@ -1,18 +1,18 @@
 
 ======================================================================
-RESUMEN DE ENTRENAMIENTO - HOUSE PRICES COMPETITION
+TRAINING SUMMARY - HOUSE PRICES COMPETITION
 ======================================================================
 
-Fecha: 2026-02-03 12:00:27
+Date: 2026-02-03 21:06:26
 
-PREPROCESAMIENTO:
-- Features originales: 79
-- Features finales: 231
+PREPROCESSING:
+- Original features: 79
+- Final features: 231
 - Target transformation: log(SalePrice)
-- Missing values: Imputados
-- Outliers: Removidos
+- Missing values: Imputed
+- Outliers: Removed
 
-MODELOS ENTRENADOS:
+TRAINED MODELS:
        Model          Type  RMSE_mean  RMSE_std
     Stacking Meta-Ensemble   0.115957  0.000000
        Ridge          Base   0.116135  0.036490
@@ -23,11 +23,11 @@ RandomForest       Bagging   0.134773  0.037087
 DecisionTree          Base   0.179414  0.051721
          KNN          Base   0.215179  0.049246
 
-MEJOR MODELO: Stacking
+BEST MODEL: Stacking
 - RMSE: 0.1160
-- Tipo: Meta-Ensemble
+- Type: Meta-Ensemble
 
-ARCHIVOS GENERADOS:
+GENERATED FILES:
 - outputs/base_models_results.csv
 - outputs/ensemble_models_results.csv
 - outputs/final_comparison.csv
