@@ -1,5 +1,5 @@
 """
-Modelos base para benchmarking
+Base models for benchmarking
 Stage 2: Individual Base Model Benchmarking
 """
 
@@ -14,7 +14,7 @@ warnings.filterwarnings('ignore')
 
 class BaseModels:
     """
-    Clase para entrenar y evaluar modelos base
+    Class to train and evaluate base models
     """
     
     def __init__(self, random_state=42):
@@ -23,7 +23,7 @@ class BaseModels:
         self.results = {}
         
     def initialize_models(self):
-        """Inicializa los tres modelos base requeridos"""
+        """Initialize the required base models"""
         self.models = {
             'Lasso': Lasso(alpha=0.001, random_state=self.random_state, max_iter=10000),
             'Ridge': Ridge(alpha=10.0, random_state=self.random_state),
@@ -39,12 +39,12 @@ class BaseModels:
         
     def evaluate_model(self, model, X, y, cv=5):
         """
-        Evalúa un modelo usando cross-validation
+        Evaluate a model using cross-validation
         
         Returns:
-            dict: métricas RMSE y MAE
+            dict: RMSE and MAE metrics
         """
-        # RMSE (negativo porque sklearn usa negative MSE)
+        # RMSE (negative because sklearn uses negative MSE)
         mse_scores = -cross_val_score(
             model, X, y, 
             cv=cv, 
@@ -70,28 +70,28 @@ class BaseModels:
     
     def train_and_evaluate_all(self, X_train, y_train, cv=5):
         """
-        Entrena y evalúa todos los modelos base
+        Train and evaluate all base models
         
         Returns:
-            dict: resultados de todos los modelos
+            dict: results for all models
         """
         print("\n" + "="*60)
-        print("EVALUACIÓN DE MODELOS BASE")
+        print("BASE MODELS EVALUATION")
         print("="*60 + "\n")
         
         if len(self.models) == 0:
             self.initialize_models()
         
         for name, model in self.models.items():
-            print(f"Evaluando {name}...")
+            print(f"Evaluating {name}...")
             
             # Cross-validation
             metrics = self.evaluate_model(model, X_train, y_train, cv=cv)
             
-            # Entrenar en todo el dataset
+            # Train on the full dataset
             model.fit(X_train, y_train)
             
-            # Guardar resultados
+            # Store results
             self.results[name] = metrics
             
             print(f"  RMSE: {metrics['RMSE_mean']:.4f} (+/- {metrics['RMSE_std']:.4f})")
@@ -100,7 +100,7 @@ class BaseModels:
         return self.results
     
     def get_results_table(self):
-        """Retorna tabla de resultados formateada"""
+        """Return formatted results table"""
         import pandas as pd
         
         results_data = []
@@ -116,16 +116,18 @@ class BaseModels:
         return pd.DataFrame(results_data)
     
     def get_best_model(self):
-        """Retorna el mejor modelo según RMSE"""
+        """Return the best model based on RMSE"""
         if not self.results:
             return None
         
-        best_name = min(self.results.keys(), 
-                       key=lambda x: self.results[x]['RMSE_mean'])
+        best_name = min(
+            self.results.keys(), 
+            key=lambda x: self.results[x]['RMSE_mean']
+        )
         return best_name, self.models[best_name]
     
     def predict(self, model_name, X):
-        """Genera predicciones con un modelo específico"""
+        """Generate predictions using a specific model"""
         if model_name not in self.models:
             raise ValueError(f"Model {model_name} not found")
         
@@ -133,7 +135,7 @@ class BaseModels:
 
 
 if __name__ == "__main__":
-    # Ejemplo de uso
+    # Example usage
     print("Base Models Module - Ready to use")
     print("Usage:")
     print("  base_models = BaseModels()")

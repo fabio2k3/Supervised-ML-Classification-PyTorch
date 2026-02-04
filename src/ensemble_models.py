@@ -1,5 +1,5 @@
 """
-Modelos de Ensemble: Bagging y Boosting
+Ensemble Models: Bagging and Boosting
 Stage 3: Implementing Advanced Ensemble Methods
 """
 
@@ -14,19 +14,19 @@ try:
     XGBOOST_AVAILABLE = True
 except ImportError:
     XGBOOST_AVAILABLE = False
-    print("⚠️  XGBoost no disponible. Instalar con: pip install xgboost")
+    print("⚠️  XGBoost not available. Install with: pip install xgboost")
 
 try:
     import lightgbm as lgb
     LIGHTGBM_AVAILABLE = True
 except ImportError:
     LIGHTGBM_AVAILABLE = False
-    print("⚠️  LightGBM no disponible. Instalar con: pip install lightgbm")
+    print("⚠️  LightGBM not available. Install with: pip install lightgbm")
 
 
 class EnsembleModels:
     """
-    Clase para modelos de ensemble: Bagging y Boosting
+    Class for ensemble models: Bagging and Boosting
     """
     
     def __init__(self, random_state=42):
@@ -35,7 +35,7 @@ class EnsembleModels:
         self.results = {}
         
     def initialize_models(self):
-        """Inicializa los modelos de ensemble"""
+        """Initialize ensemble models"""
         
         # BAGGING: Random Forest
         self.models['RandomForest'] = RandomForestRegressor(
@@ -79,10 +79,10 @@ class EnsembleModels:
         
     def evaluate_model(self, model, X, y, cv=5):
         """
-        Evalúa un modelo usando cross-validation
+        Evaluate a model using cross-validation
         
         Returns:
-            dict: métricas RMSE y MAE
+            dict: RMSE and MAE metrics
         """
         # RMSE
         mse_scores = -cross_val_score(
@@ -110,28 +110,28 @@ class EnsembleModels:
     
     def train_and_evaluate_all(self, X_train, y_train, cv=5):
         """
-        Entrena y evalúa todos los modelos de ensemble
+        Train and evaluate all ensemble models
         
         Returns:
-            dict: resultados de todos los modelos
+            dict: results for all models
         """
-        print("\n" + "="*60)
-        print("EVALUACIÓN DE MODELOS ENSEMBLE")
-        print("="*60 + "\n")
+        print("\n" + "=" * 60)
+        print("ENSEMBLE MODELS EVALUATION")
+        print("=" * 60 + "\n")
         
         if len(self.models) == 0:
             self.initialize_models()
         
         for name, model in self.models.items():
-            print(f"Evaluando {name}...")
+            print(f"Evaluating {name}...")
             
             # Cross-validation
             metrics = self.evaluate_model(model, X_train, y_train, cv=cv)
             
-            # Entrenar en todo el dataset
+            # Train on full dataset
             model.fit(X_train, y_train)
             
-            # Guardar resultados
+            # Store results
             self.results[name] = metrics
             
             print(f"  RMSE: {metrics['RMSE_mean']:.4f} (+/- {metrics['RMSE_std']:.4f})")
@@ -140,7 +140,7 @@ class EnsembleModels:
         return self.results
     
     def get_results_table(self):
-        """Retorna tabla de resultados formateada"""
+        """Return formatted results table"""
         import pandas as pd
         
         results_data = []
@@ -157,20 +157,22 @@ class EnsembleModels:
         return pd.DataFrame(results_data)
     
     def get_best_model(self):
-        """Retorna el mejor modelo según RMSE"""
+        """Return the best model based on RMSE"""
         if not self.results:
             return None
         
-        best_name = min(self.results.keys(), 
-                       key=lambda x: self.results[x]['RMSE_mean'])
+        best_name = min(
+            self.results.keys(), 
+            key=lambda x: self.results[x]['RMSE_mean']
+        )
         return best_name, self.models[best_name]
     
     def get_feature_importance(self, model_name, feature_names=None):
         """
-        Obtiene la importancia de features del modelo
+        Get feature importance from a model
         
         Returns:
-            DataFrame con features ordenadas por importancia
+            DataFrame with features ordered by importance
         """
         import pandas as pd
         
@@ -192,11 +194,11 @@ class EnsembleModels:
             
             return importance_df
         else:
-            print(f"⚠️  {model_name} no tiene atributo feature_importances_")
+            print(f"⚠️  {model_name} does not have feature_importances_ attribute")
             return None
     
     def predict(self, model_name, X):
-        """Genera predicciones con un modelo específico"""
+        """Generate predictions using a specific model"""
         if model_name not in self.models:
             raise ValueError(f"Model {model_name} not found")
         
@@ -204,7 +206,7 @@ class EnsembleModels:
 
 
 if __name__ == "__main__":
-    # Verificar disponibilidad de librerías
+    # Library availability check
     print("Ensemble Models Module - Status Check")
     print("-" * 40)
     print(f"XGBoost available: {XGBOOST_AVAILABLE}")
